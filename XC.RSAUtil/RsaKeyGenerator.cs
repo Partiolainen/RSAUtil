@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
+using XC.RSAUtil.Types;
 
 namespace XC.RSAUtil
 {
@@ -20,12 +20,13 @@ namespace XC.RSAUtil
         /// </summary>
         /// <param name="keySize">Key Size.Unit: bits</param>
         /// <returns></returns>
-        public static List<string> XmlKey(int keySize)
+        public static KeyPair XmlKey(int keySize)
         {
             RSA rsa = RSA.Create();
             rsa.KeySize = keySize;
             var rsap = rsa.ExportParameters(true);
-            List<string> res = new List<string>();
+            //List<string> res = new List<string>();
+			var res = new KeyPair();
 
             XElement privatElement = new XElement("RSAKeyValue");
             //Modulus
@@ -55,8 +56,8 @@ namespace XC.RSAUtil
             privatElement.Add(prid);
             
             //添加私钥
-            res.Add(privatElement.ToString());
-
+            //res.Add(privatElement.ToString());
+	        res.PrivateKey = privatElement.ToString();
 
             XElement publicElement = new XElement("RSAKeyValue");
             //Modulus
@@ -68,7 +69,8 @@ namespace XC.RSAUtil
             publicElement.Add(pubexponent);
 
             //添加公钥
-            res.Add(publicElement.ToString());
+            //res.Add(publicElement.ToString());
+	        res.PublicKey = publicElement.ToString();
 
             return res;
         }
@@ -79,9 +81,10 @@ namespace XC.RSAUtil
         /// <param name="keySize">Key Size.Unit: bits</param>
         /// <param name="format">Whether the format is true If it is standard pem file format</param>
         /// <returns></returns>
-        public static List<string> Pkcs1Key(int keySize,bool format)
+        public static KeyPair Pkcs1Key(int keySize,bool format)
         {
-            List<string> res = new List<string>();
+            //List<string> res = new List<string>();
+			var res = new KeyPair();
 
             IAsymmetricCipherKeyPairGenerator kpGen = GeneratorUtilities.GetKeyPairGenerator("RSA");
             kpGen.Init(new KeyGenerationParameters(new SecureRandom(), keySize));
@@ -98,7 +101,8 @@ namespace XC.RSAUtil
                 privateKey = privateKey.Replace("-----BEGIN RSA PRIVATE KEY-----", "").Replace("-----END RSA PRIVATE KEY-----", "").Replace("\r\n", "");
             }
 
-            res.Add(privateKey);
+            //res.Add(privateKey);
+	        res.PrivateKey = privateKey;
 
             StringWriter swpub = new StringWriter();
             PemWriter pWrtpub = new PemWriter(swpub);
@@ -110,7 +114,8 @@ namespace XC.RSAUtil
                 publicKey = publicKey.Replace("-----BEGIN PUBLIC KEY-----", "").Replace("-----END PUBLIC KEY-----", "").Replace("\r\n", "");
             }
 
-            res.Add(publicKey);
+            //res.Add(publicKey);
+	        res.PublicKey = publicKey;
 
             return res;
         }
@@ -121,9 +126,10 @@ namespace XC.RSAUtil
         /// <param name="keySize">Key Size.Unit: bits</param>
         /// <param name="format">Whether the format is true If it is standard pem file format</param>
         /// <returns></returns>
-        public static List<string> Pkcs8Key(int keySize, bool format)
+        public static KeyPair Pkcs8Key(int keySize, bool format)
         {
-            List<string> res = new List<string>();
+            //List<string> res = new List<string>();
+			var res = new KeyPair();
 
             IAsymmetricCipherKeyPairGenerator kpGen = GeneratorUtilities.GetKeyPairGenerator("RSA");
             kpGen.Init(new KeyGenerationParameters(new SecureRandom(), keySize));
@@ -141,7 +147,8 @@ namespace XC.RSAUtil
                 privateKey = privateKey.Replace("-----BEGIN PRIVATE KEY-----", "").Replace("-----END PRIVATE KEY-----", "").Replace("\r\n", "");
             }
 
-            res.Add(privateKey);
+            //res.Add(privateKey);
+	        res.PrivateKey = privateKey;
 
             StringWriter swpub = new StringWriter();
             PemWriter pWrtpub = new PemWriter(swpub);
@@ -153,7 +160,8 @@ namespace XC.RSAUtil
                 publicKey = publicKey.Replace("-----BEGIN PUBLIC KEY-----", "").Replace("-----END PUBLIC KEY-----", "").Replace("\r\n", "");
             }
 
-            res.Add(publicKey);
+            //res.Add(publicKey);
+	        res.PublicKey = publicKey;
 
             return res;
         }

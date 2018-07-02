@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace XC.RSAUtil.Test
 {
@@ -6,15 +8,22 @@ namespace XC.RSAUtil.Test
     {
         static void Main(string[] args)
         {
-	        var keyList = RsaKeyGenerator.XmlKey(2048);
-	        var privateKey = keyList[0];
-	        var publicKey = keyList[1];
+	        var keyList = RsaKeyGenerator.Pkcs1Key(2048, true);
 
-			Console.WriteLine(RsaKeyGenerator.XmlKey(2048)[0]);
-            Console.WriteLine(RsaKeyGenerator.Pkcs1Key(2048,true)[0]);
-            Console.WriteLine(RsaKeyGenerator.Pkcs8Key(2048,true)[0]);
+			Console.WriteLine($"Public key:\n{keyList.PublicKey}\n\nPrivate key:\n{keyList.PrivateKey}");
 
-            Console.ReadKey();
+	        Console.Write("String for encrypt: ");
+	        var test_string = Console.ReadLine();
+	        var rsa_encryptor = new RsaPkcs1Util(Encoding.UTF8, keyList.PublicKey);
+	        var encrypted_string = rsa_encryptor.Encrypt(test_string, RSAEncryptionPadding.Pkcs1);
+			Console.WriteLine($"\nEncrypted string:\n{encrypted_string}\n");
+
+			var rsa_decryptor = new RsaPkcs1Util(Encoding.UTF8, keyList.PublicKey, keyList.PrivateKey);
+	        var decrypted_string = rsa_decryptor.Decrypt(encrypted_string, RSAEncryptionPadding.Pkcs1);
+	        Console.WriteLine($"\nDecrypted string:\n{decrypted_string}\n");
+
+			Console.WriteLine("\nPress any key to exit");
+			Console.ReadKey();
         }
     }
 }
