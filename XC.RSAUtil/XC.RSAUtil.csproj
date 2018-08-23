@@ -10,11 +10,11 @@
     <PackageLicenseUrl>https://github.com/Partiolainen/RSAUtil/blob/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageTags>RSA,RSA Xml,RSA Pkcs1,RSA Pkcs8,RSA Convert,RSA Format,Pem,RSAUtil,RSAHelper</PackageTags>
-    <Version>1.1.1</Version>
+    <Version>1.1.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BouncyCastle.Crypto\XC.BouncyCastle.Crypto.csproj" />
+    <PackageReference Include="XC.BouncyCastle.Crypto" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
